@@ -8,6 +8,8 @@ import bodyParser from "body-parser";
 import path from "path";
 const app =express();
 
+const PORT = process.env.PORT || 8000
+
 dotenv.config();
 const connect= async ()=>{
 try {
@@ -33,8 +35,8 @@ app.use("/api/question", questionRoute)
 
 
 
-app.listen(8000,()=>{
+app.listen(PORT,()=>{
     connect()
-    console.log("SERVER STARTED");
+    console.log("SERVER STARTED   ");
 })
   
