@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const QuestionSchema= new mongoose.Schema({
-    // body : {
-    //     type : String,
-    //     required : true
-    //   },
+    body : {
+        type : String,
+        required : true
+      },
       explanation : {
         type : String
       },
