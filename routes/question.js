@@ -6,8 +6,9 @@ const router = express.Router();
 
 //ADD QUESTION
 router.post("/", async (req, res) => {
-  const { explanation, options, subject, answer, marks } = req.body;
+  const { body, explanation, options, subject, answer, marks } = req.body;
   const newQuestion = new question({
+    body,
     explanation,
     options,
     subject,
@@ -31,7 +32,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async(req,res)=>{
   try {
     const updatedQuestion= await question.findByIdAndUpdate(req.params.id,{$set: req.body}, {new:true})
-    res.status(200).json({success:true, message:'Question Updated Succesfully'})
+    res.status(200).json(updatedQuestion)
   } catch (err) {
     res.status(500).json({success:false, message:'Question Not Updated'});
   }
