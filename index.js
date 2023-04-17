@@ -8,6 +8,8 @@ import testRoute from "./routes/test.js"
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import path from 'path';
+
 const app = express();
 
 const PORT = process.env.PORT || 8000
