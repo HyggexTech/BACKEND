@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const UserSchema= new mongoose.Schema({
     username : {
         type : String,
-        required : true
+        required : true,
+        unique:true
       },
       email : {
         type : String,
@@ -14,16 +15,16 @@ const UserSchema= new mongoose.Schema({
         type : String,
         enum : ['TEACHER', 'STUDENT'],
         required : true 
-      },
+      }, 
       password : {
         type : String,
         required : true
       },
-      status : {
-        type : Boolean,
-        default : true
-      },
-    //   createdBy : {
+    //   isAdmin : {
+    //     type : Boolean,
+    //     default : false
+    //   },
+    // //   createdBy : {
     //     type : mongoose.Schema.Types.ObjectId,
     //     ref : 'adminModel'
     //   }
@@ -32,4 +33,4 @@ const UserSchema= new mongoose.Schema({
     {
       timestamps:{}
 })
-export default mongoose.model("userModel", UserSchema)
+export default mongoose.model("User", UserSchema)

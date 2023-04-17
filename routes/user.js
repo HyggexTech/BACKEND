@@ -1,17 +1,14 @@
 import express from "express";
-
+import { verifyTeacher, verifyToken } from "../utill/verifytoken.js";
 const router= express.Router();
- 
-router.get("/", (req,res)=>{
-    res.send("Hello This is USER endpoint")
+
+
+router.get("/checkauthentication", verifyToken, (req,res,next)=>{
+   res.send("You are Logged in")
+})
+router.get("/checkteacher/:id", verifyTeacher, (req,res,next)=>{
+   res.send("You are Logged in as Teacher")
 })
 
-router.post("/",async(req,res)=>{
-    try {
-        
-    } catch (error) {
-        res.status(500).json(error)
-    }
-})
 
 export default router;

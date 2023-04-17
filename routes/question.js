@@ -1,11 +1,12 @@
 import express from "express";
 import question from "../models/question.js";
 import createError from "../utill/error.js";
+import { verifyTeacher } from "../utill/verifytoken.js";
 
 const router = express.Router();
 
 //ADD QUESTION
-router.post("/", async (req, res) => {
+router.post("/",verifyTeacher, async (req, res) => {
   const { body, explanation, options, subject, answer, marks } = req.body;
   const newQuestion = new question({
     body,
@@ -29,7 +30,7 @@ router.post("/", async (req, res) => {
   }
 });
 //UPDATE QUESTION
-router.put("/:id", async(req,res)=>{
+router.put("/:id", verifyTeacher, async(req,res)=>{
   try {
     const updatedQuestion= await question.findByIdAndUpdate(req.params.id,{$set: req.body}, {new:true})
     res.status(200).json(updatedQuestion)
@@ -40,7 +41,7 @@ router.put("/:id", async(req,res)=>{
 
 //DELETE QUESTION
 
-router.delete("/:id", async(req,res,next)=>{
+router.delete("/:id", verifyTeacher, async(req,res,next)=>{
   const failed =false;
   if(failed) return next(createError(401, "You are Not Authenticated"))
   try {

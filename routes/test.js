@@ -1,10 +1,11 @@
 import express from "express";
 import test from "../models/test.js";
 import question from "../models/question.js";
+import { verifyTeacher } from "../utill/verifytoken.js";
 
 const router = express.Router();
-
-router.post("/", async (req, res) => {
+//CREATE TEST
+router.post("/",verifyTeacher, async (req, res) => {
   try {
     const { title, subjects, maxmarks, queTypes, endTime, duration, regStartTime, regEndTime, resultTime } = req.body.test;
 
@@ -24,8 +25,9 @@ router.post("/", async (req, res) => {
     const questionIds = [];
 
     for (const q of req.body.questions) {
-      const { explanation, options, subject, answer, marks } = q;
+      const {body, explanation, options, subject, answer, marks } = q;
       const newQuestion = new question({
+        body,
         explanation,
         options,
         subject,
