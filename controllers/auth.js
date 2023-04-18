@@ -15,7 +15,7 @@ export const register= async (req, res, next) => {
     if (existingUser) {
       return next(createError(409, "Username or email already exists"));
     }
-    
+
     const salt = bcrypt.genSaltSync(saltRounds);
     const hash = bcrypt.hashSync(req.body.password, salt);
     const newUser = new User({
@@ -46,7 +46,7 @@ export const login= async (req, res, next) => {
      const {password, ...otherDetails}= user._doc; 
      res.cookie("access_token",token,{
         httpOnly: true
-     }).status(200).json({...otherDetails});
+     }).status(200).json({...otherDetails, access_token: token});
     } catch (err) {
       next(err);
     }
