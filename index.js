@@ -36,6 +36,9 @@ app.use(
   cors({
     origin: ["http://localhost:3001", "http://localhost:3000", "https://hyggexx.onrender.com"],
     credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"],
+    exposedHeaders: ["Authorization"],
+    methods: ["GET", "POST"],
   })
 );
 
