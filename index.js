@@ -34,7 +34,7 @@ const connect = async () => {
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3001", "http://localhost:3000"],
+    origin: ["http://localhost:3001", "http://localhost:3000", "https://hyggexx.onrender.com"],
     credentials: true,
   })
 );
