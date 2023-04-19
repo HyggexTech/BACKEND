@@ -45,12 +45,8 @@ export const login= async (req, res, next) => {
 
      const {password, ...otherDetails}= user._doc; 
      res.cookie("access_token",token,{
-      httpOnly: true,
-      expires: new Date(Date.now() + oneDay),
-      domain: ".onrender.com", // include both frontend and backend domains
-      path: "/", // include the root path of both domains
-      secure: process.env.NODE_ENV === "production",
-      signed: true,        
+        httpOnly: true
+        
      }).status(200).json({...otherDetails, access_token: token});
     } catch (err) {
       next(err);
