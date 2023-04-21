@@ -203,3 +203,33 @@ export const getTestQuestion =async (req, res) => {
     next(err)
 }
  } 
+
+export const getUpcomingTestforStudent = async (req, res, next) => {
+  
+  try {
+    const tests = await Test
+      .find({ endTime: { $gt: Date.now() } })
+      .sort({ startTime: 1 });
+
+    
+    const testlist = tests.reduce((acc, test) => {  
+      acc.push({
+          _id: test._id,
+          title: test.title,
+          status: test.status,
+          startTime: test.startTime,
+          endTime: test.endTime,
+          resultTime: test.resultTime,
+          maxmarks: test.maxmarks,
+          duration: test.duration,
+        });
+    
+      return acc;
+    }, []);
+
+    res.json({ success: true, upcomingtestlist: testlist });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
