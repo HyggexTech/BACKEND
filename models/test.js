@@ -11,7 +11,7 @@ const TestSchema=new mongoose.Schema({
       }],
       questions : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'question'
+        ref : 'Question'
       }],
       maxmarks : {
         type : Number,
@@ -48,11 +48,11 @@ const TestSchema=new mongoose.Schema({
         enum : ['CREATED','REGISTRATION_STARTED','REGISTRATION_COMPLETE','TEST_STARTED','TEST_COMPLETE','RESULT_DECLARED','CANCELLED'],
         default : 'CREATED'
       },
-    //   createdBy : {
-    //     type : mongoose.Schema.Types.ObjectId,
-    //     ref : 'userModel',
-    //     required : true
-    //   }
+      // createdBy : {
+      //   type : mongoose.Schema.Types.ObjectId,
+      //   ref : 'User',
+      //   required : true
+      // }
     },
     {
       timestamps : {}
