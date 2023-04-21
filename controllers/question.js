@@ -1,16 +1,24 @@
 import question from "../models/question.js";
 import createError from "../utill/error.js";
-
+import Subject from "../models/subject.js";
+import mongoose from "mongoose";
 
 export const addQuestion=async (req, res) => {
-    const { body, explanation, options, subject, answer, marks } = req.body;
+  const subject=  await Subject.findOne({name: req.body.subject, status: true});
+   if(!subject){
+    res.status(404).json({
+      success: false,
+      message: "Invalid Subjects"
+    })
+   }
+    
     const newQuestion = new question({
-      body,
-      explanation,
-      options,
-      subject,
-      answer,
-      marks,
+      body : req.body.body,
+      explanation : req.body.explanation,
+      options: req.body.options,
+      subject : new mongoose.Types.ObjectId(subject._id),
+      answer: req.body.answer,
+      marks: req.body.marks,
       status: true
     });
   
@@ -38,7 +46,7 @@ export const addQuestion=async (req, res) => {
 export const deleteQuestion = async(req,res,next)=>{
   
   try {
-    const updatedQuestion= await question.findByIdAndDelete(req.params.id)
+    const deleteQuestion= await question.findByIdAndDelete(req.params.id)
     res.status(200).json({success:true, message:'Question Deleted Succesfully'})
   } catch (err) {
     next(err)

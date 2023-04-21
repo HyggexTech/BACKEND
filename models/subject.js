@@ -20,4 +20,4 @@ const SubjectSchema= new mongoose.Schema({
       timestamps : {}
     
 })
-export default mongoose.model("subjectModel", SubjectSchema);
+export default mongoose.model("Subject", SubjectSchema);

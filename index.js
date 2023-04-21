@@ -7,8 +7,8 @@ import questionRoute from "./routes/question.js"
 import testRoute from "./routes/test.js"
 import cors from "cors";
 import morgan from "morgan";
-import cookieParser from "cookie-parser";
 import path from 'path';
+import adminRoute from "./routes/admin.js"
 
 const app = express();
 
@@ -31,7 +31,6 @@ const connect = async () => {
 };
 
 //middlewares
-app.use(cookieParser());
 app.use(
   cors({
     origin: ["http://localhost:3001", "http://localhost:3000", "https://hyggexx.onrender.com", ],
@@ -50,6 +49,7 @@ app.use("/api/test", testRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/question", questionRoute);
+app.use("/api/admin", adminRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

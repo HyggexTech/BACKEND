@@ -13,10 +13,10 @@ const QuestionSchema= new mongoose.Schema({
         required : true
       }],
       subject : {
-        type : String,
-        // ref : 'subjectModel',
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Subject',
         required : true
-      },
+          },
       answer : {
         type : String,
         required : true

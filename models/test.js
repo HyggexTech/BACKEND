@@ -6,8 +6,8 @@ const TestSchema=new mongoose.Schema({
         required : true
       },
       subjects : [{
-        type : String,
-        required: true
+        type : mongoose.Schema.Types.ObjectId,
+        ref:'Subject'
       }],
       questions : [{
         type : mongoose.Schema.Types.ObjectId,
@@ -31,14 +31,14 @@ const TestSchema=new mongoose.Schema({
         type : Number,
         required : true
       },
-      regStartTime : {
-        type : Date,
-        required : true
-      },
-      regEndTime : {
-        type : Date,
-        required : true
-      },
+      // regStartTime : {
+      //   type : Date,
+      //   required : true
+      // },
+      // regEndTime : {
+      //   type : Date,
+      //   required : true
+      // },
       resultTime : {
         type : Date,
         required : true
