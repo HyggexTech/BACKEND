@@ -10,6 +10,5 @@ router.get("/checkteacher/:id", verifyTeacher, (req,res,next)=>{
    res.send("You are Logged in as Teacher")
 })
 
-router.post("/testregistration", verifyStudent, testRegitsration)
 
 export default router;
