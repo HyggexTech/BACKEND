@@ -4,7 +4,7 @@ import Subject from "../models/subject.js";
 import mongoose from "mongoose";
 
 export const addQuestion=async (req, res) => {
-  const subject=  await Subject.findOne({name: req.body.subject, status: true});
+  const subject=  await Subject.findOne({_id:req.body.subject, status: true});
    if(!subject){
     res.status(404).json({
       success: false,
@@ -16,7 +16,7 @@ export const addQuestion=async (req, res) => {
       body : req.body.body,
       explanation : req.body.explanation,
       options: req.body.options,
-      subject : new mongoose.Types.ObjectId(subject._id),
+      subject :subject._id,
       answer: req.body.answer,
       marks: req.body.marks,
       status: true

@@ -5,7 +5,7 @@ import { verifyTeacher } from "../utill/verifytoken.js";
 const router = express.Router();
 
 //ADD QUESTION
-router.post("/add", verifyTeacher, addQuestion );
+router.post("/add", addQuestion );
 //UPDATE QUESTION
 router.put("/:id/update", verifyTeacher, updateQuestion);
 //DELETE QUESTION
