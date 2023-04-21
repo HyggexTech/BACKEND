@@ -7,7 +7,7 @@ import { createTest, deleteTest, getAllTest, getTestQuestion } from "../controll
 
 const router = express.Router();
 //CREATE TEST
-router.post("/create", createTest );
+router.post("/create", verifyTeacher, createTest );
 //GET ALL TESTS
 router.get('/allTest', getAllTest);
 //GET QUESTION OF SPECIFIC TEST
