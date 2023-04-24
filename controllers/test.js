@@ -65,7 +65,7 @@ export const updateStatus = (test,correctStatus) => {
     if(correctStatus !== test.status) {
       console.log(correctStatus + " "+ test.status)
   
-      testModel.findByIdAndUpdate({_id:test._id},{status : correctStatus})
+      Test.findByIdAndUpdate({_id:test._id},{status : correctStatus})
       .then((updated)=>{
         console.log("updated status of test "+updated._id+" to "+correctStatus);
       }).catch((err)=>{

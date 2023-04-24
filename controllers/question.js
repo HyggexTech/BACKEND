@@ -1,7 +1,5 @@
 import question from "../models/question.js";
-import createError from "../utill/error.js";
 import Subject from "../models/subject.js";
-import mongoose from "mongoose";
 
 export const addQuestion=async (req, res) => {
   const subject=  await Subject.findOne({_id:req.body.subject, status: true});
@@ -55,7 +53,7 @@ export const deleteQuestion = async(req,res,next)=>{
 
 export const allQuestion = async (req, res) => {
   try {
-    const questions = await question.find();
+    const questions = await question.find().populate('subject' , 'name');
     res.json(questions);
   } catch (err) {
     res.status(500).json({ message: err.message });
