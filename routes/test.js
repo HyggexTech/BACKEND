@@ -2,7 +2,7 @@ import express from "express";
 import Test from "../models/test.js";
 import Question from "../models/question.js";
 import { verifyTeacher } from "../utill/verifytoken.js";
-import { createTest, deleteTest, getAllTest, getTestQuestion } from "../controllers/test.js";
+import { createTest, deleteTest, getAllTest, getTestQuestion, getTestsDetailsFromId } from "../controllers/test.js";
 
 
 const router = express.Router();
@@ -14,5 +14,7 @@ router.get('/allTest', getAllTest);
 router.get('/:testId/questions', getTestQuestion );
 //DELETE TEST
 router.delete('/delete', deleteTest);
+//TEST DETAILS
+router.get('/testDetails', getTestsDetailsFromId)
 
 export default router;

@@ -1,4 +1,6 @@
 import Subject from "../models/subject.js";
+import Course from "../models/course.js";
+import createError from "../utill/error.js";
 
 export const addSubject = async (req, res, next) =>{
 try {
@@ -32,4 +34,27 @@ try {
     })
 }   
 }
+
+export const addCourse =  async(req, res ,next) =>{
+try {
+
+  const course = await Course.findOne({name: req.body.name});
+  if(course) return next(createError(404,"Course Already Exists"));
+
+  const newCourse = new Course({
+    name: req.body.name,
+    body: req.body.body
+  });
+  
+  await newCourse.save();
+  res.status(200).send("Course Created")
+
+  
+} catch (err) {
+  next(err);
+}
+  
+}
+
+
 

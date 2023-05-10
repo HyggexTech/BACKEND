@@ -4,25 +4,24 @@ import Test from "../models/test.js";
 import User from "../models/user.js";
 // import { updateStatus } from "./test.js";
 
-const getTestStatus = (test) =>{
-    if(test.status === 'CANCELLED')
-    return test.status;
-  const status = 'CREATED'
-  const now = new Date();
-  if(Date.parse(test.resultTime) < now) {
-    status = 'RESULT_DECLARED';
-  } else if(Date.parse(test.endTime) < now) {
-    status = 'TEST_COMPLETE';
-  } else if(Date.parse(test.startTime) < now) {
-    status = 'TEST_STARTED';
-  }
-  return status;
-}
+// const getTestStatus = (test) =>{
+//     if(test.status === 'CANCELLED')
+//     return test.status;
+//   const status = 'CREATED'
+//   const now = new Date();
+//   if(Date.parse(test.resultTime) < now) {
+//     status = 'RESULT_DECLARED';
+//   } else if(Date.parse(test.endTime) < now) {
+//     status = 'TEST_COMPLETE';
+//   } else if(Date.parse(test.startTime) < now) {
+//     status = 'TEST_STARTED';
+//   }
+//   return status;
+// }
 
 const getAttemptEndTime = (test, startAttemptTme) =>{
     const regularEndTime = new Date(Date.parse(startAttemptTme) + (test.duration*1000));
-    var endTime= new Date(Date.parse(test.endTime));
-    return regularEndTime <endTime ? regularEndTime: endTime;
+    return regularEndTime;
 }
 
 const sortByIds = (questions, questionids) => {
@@ -72,8 +71,7 @@ const sortByIds = (questions, questionids) => {
   }
 
 
-  export  const startTestForStudent = async (req, res, next) => {
-  
+  export const startTestForStudent = async (req, res, next) => {
     try {
       const test = await Test.findById(req.body.testid);
   
@@ -85,71 +83,62 @@ const sortByIds = (questions, questionids) => {
         return;
       }
   
-      // const correctStatus = getTestStatus(test);
+      const student = await User.findById(req.user.id);
   
-      // if (correctStatus !== test.status) {
-      //   await updateStatus(test, correctStatus);
-      //   test.status = correctStatus;
-      // }
-  
-      if (test.status === 'TEST_STARTED') {
-        const answersheets = await answersheet.find({
-          student: req.body.studentId,
-          test: req.body.testid,
+      if (!student) {
+        res.json({
+          success: false,
+          message: 'Unable to find student',
         });
+        return;
+      }
   
-        if (answersheets.length > 0) {
-          if (Date.now() > getAttemptEndTime(test, answersheets[0].startTime)) {
-            answersheets[0].completed = true;
-            await answersheet.findByIdAndUpdate(
-              answersheets[0]._id,
-              answersheets[0]
-            );
-            console.log(
-              `answer sheet marked completed for test ${test._id} user ${req.body.studentId}`
-            );
-            await calculateMarks(
-              test.questions,
-              answersheets[0].answers,
-              answersheets[0]._id
-            );
-          }
+      const answersheets = await answersheet.find({
+        student: req.user.id,
+        test: req.body.testid,
+      });
   
-          if (answersheets[0].completed) {
-            res.json({
-              success: false,
-              message: 'you have taken this test',
-            });
-          } else {
-            res.json({
-              success: true,
-              message: 'test is already started',
-              answersheet: answersheets[0],
-              questions: test.questions,
-            });
-          }
-        } else {
-          const tempdata = new answersheet({
-            test: req.body.testid,
-            student: req.body.studentId,
+      if (answersheets.length > 0) {
+        if (Date.now() > getAttemptEndTime(test, answersheets[0].startTime)) {
+          answersheets[0].completed = true;
+          await answersheet.findByIdAndUpdate(
+            answersheets[0]._id,
+            answersheets[0]
+          );
+          console.log(
+            `answer sheet marked completed for test ${test._id} user ${req.user.id}`
+          );
+          await calculateMarks(
+            test.questions,
+            answersheets[0].answers,
+            answersheets[0]._id
+          );
+        }
+  
+        if (answersheets[0].completed) {
+          res.json({
+            success: false,
+            message: 'you have taken this test',
           });
-          const newdata = await tempdata.save();
+        } else {
           res.json({
             success: true,
-            message: 'Test started',
-            answersheet: newdata,
+            message: 'test is already started',
+            answersheet: answersheets[0],
             questions: test.questions,
           });
         }
-      } else if (test.status === 'TEST_COMPLETE') {
-        res.json({
-          success: false,
-          message: 'Test time is over',
-        });
       } else {
+        const tempdata = new answersheet({
+          test: req.body.testid,
+          student: req.user.id,
+        });
+        const newdata = await tempdata.save();
         res.json({
-          success: false,
-          message: 'Test is not started',
+          success: true,
+          message: 'Test started',
+          answersheet: newdata,
+          questions: test.questions,
         });
       }
     } catch (err) {
@@ -160,8 +149,7 @@ const sortByIds = (questions, questionids) => {
       });
     }
   };
-  
-  
+    
   export const getQuestionsAndSetStartTime = async (req, res, next) => {
     const ques = await Question.find({ _id: { $in: req.body.questionid } });
     const questions = sortByIds(ques, req.body.questionid);

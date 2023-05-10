@@ -1,8 +1,9 @@
 import express from "express";
-import { addSubject } from "../controllers/admin.js";
+import { addCourse, addSubject } from "../controllers/admin.js";
 
 const router= express.Router();
 
 router.post("/addsubject", addSubject)
+router.post("/addCourse", addCourse)
 
 export default router;

@@ -26,3 +26,14 @@ export const verifyTeacher = (req, res, next) => {
       }
     });
   };
+
+  export const verifyStudent= (req, res, next) => {
+    verifyToken(req, res, () => {
+      const user = req.user;
+      if (user&& user.usertype === "STUDENT") {
+        next();
+      } else {
+        return next(createError(403, "You are not authorized!"));
+      }
+    });
+  }; 

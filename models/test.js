@@ -23,10 +23,10 @@ const TestSchema=new mongoose.Schema({
       startTime : {
         type : Date
       },
-      endTime : {
-        type : Date,
-        required : true
-      },
+      // endTime : {
+      //   type : Date,
+      //   required : true
+      // },
       duration : {
         type : Number,
         required : true
@@ -39,10 +39,10 @@ const TestSchema=new mongoose.Schema({
       //   type : Date,
       //   required : true
       // },
-      resultTime : {
-        type : Date,
-        required : true
-      },
+      // resultTime : {
+      //   type : Date,
+      //   required : true
+      // },
       status : {
         type : String,
         enum : ['CREATED','TEST_STARTED','TEST_COMPLETE','RESULT_DECLARED','CANCELLED'],

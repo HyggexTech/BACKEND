@@ -4,26 +4,6 @@ import Question from "../models/question.js";
 import Subject from "../models/subject.js";
 
 
-const getTestStatus = (test) => {
-    if(test.status === 'CANCELLED')
-      return test.status;
-    var status = 'CREATED'
-    var now = new Date();
-    if(Date.parse(test.resultTime) < now) {
-      status = 'RESULT_DECLARED';
-    } else if(Date.parse(test.endTime) < now) {
-      status = 'TEST_COMPLETE';
-    } else if(Date.parse(test.startTime) < now) {
-      status = 'TEST_STARTED';
-    } else if(Date.parse(test.regEndTime) < now) {
-      status = 'REGISTRATION_COMPLETE'
-    } else if(Date.parse(test.regStartTime) < now) {
-      status = 'REGISTRATION_STARTED';
-    }
-  
-  
-    return status;
-  }
   const generateTestpaper = async (subjects, maxmarks, queTypes) => {
     let templist = [];
     let quelist = [];
@@ -60,31 +40,17 @@ const getTestStatus = (test) => {
   
   
 
-export const updateStatus = (test,correctStatus) => {
-  
-    if(correctStatus !== test.status) {
-      console.log(correctStatus + " "+ test.status)
-  
-      Test.findByIdAndUpdate({_id:test._id},{status : correctStatus})
-      .then((updated)=>{
-        console.log("updated status of test "+updated._id+" to "+correctStatus);
-      }).catch((err)=>{
-        console.log('Error in status update');
-        console.log(err);
-      })
-    }
-  }
   
   
  export const createTest = async (req, res) => {
   const genQue = await generateTestpaper(req.body.subjects,req.body.maxmarks, req.body.queTypes);
-  // if(genQue.quelist.length < 1) {
-  //   res.json({
-  //     success : false,
-  //     message : 'Not enough questions for selected subject'
-  //   })
-  //   return;
-  // }
+  if(genQue.quelist.length < 1) {
+    res.json({
+      success : false,
+      message : 'Not enough questions for selected subject'
+    })
+    return;
+  }
 
 const tempdata= new Test({
   title: req.body.title,
@@ -94,11 +60,10 @@ const tempdata= new Test({
   questions : genQue.quelist,
   answers : genQue.anslist,
   startTime : req.body.startTime,
-  endTime : req.body.endTime,
   duration : req.body.duration,
   // regStartTime : req.body.regStartTime,
   // regEndTime : req.body.regEndTime,
-  resultTime : req.body.resultTime,
+  // resultTime : req.body.resultTime,
 
 })
 try {
@@ -169,12 +134,18 @@ try {
 
 export const getAllTest = async (req, res) => {
     try {
-      const tests = await Test.find();
-      res.json(tests);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+      const tests = await Test.find()
+    
+      res.json(tests)
+    }catch(err){
+      console.log(err);
+      res.json({
+        success:false,
+        message: "an error occured"
+      })
     }
   }
+
   
 export const getTestQuestion =async (req, res) => {
     try {
@@ -208,18 +179,15 @@ export const getUpcomingTestforStudent = async (req, res, next) => {
   
   try {
     const tests = await Test
-      .find({ endTime: { $gt: Date.now() } })
-      .sort({ startTime: 1 });
-
+    .find({ startTime: { $gte: Date.now() } })
+    .sort({ startTime: 1 });
+  
     
     const testlist = tests.reduce((acc, test) => {  
       acc.push({
           _id: test._id,
           title: test.title,
-          status: test.status,
           startTime: test.startTime,
-          endTime: test.endTime,
-          resultTime: test.resultTime,
           maxmarks: test.maxmarks,
           duration: test.duration,
         });
@@ -231,5 +199,39 @@ export const getUpcomingTestforStudent = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getTestsDetailsFromId = async (req, res, next) => {
+  try {
+    const test = await Test.findById({ _id: req.body.testid });
+    if (test) {
+      
+
+      const testResponse = {
+        _id: test._id,
+        title: test.title,
+        startTime: test.startTime,
+        maxmarks: test.maxmarks,
+        duration: test.duration,
+      };
+
+      
+      return res.json({
+        success: true,
+        test: testResponse,
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "test id not found",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
