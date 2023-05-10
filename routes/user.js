@@ -26,7 +26,7 @@ router.post("/register", verifyStudent, courseReg)
 router.get("/allRegisteredCourse", verifyStudent, getAllCourseWithStudentRegisterCheck)
 router.get("/registeredCourse", verifyStudent, registerdCourseForUser )
 
-router.post("/startTest", verifyStudent, startTestForStudent)
+router.post("/startTest/:testid", verifyStudent, startTestForStudent)
 router.post("/getquenStartTime", getQuestionsAndSetStartTime)
 router.post("/saveAnswer", saveAnswer)
 router.post("/endTest", saveAnswerandEndTest)

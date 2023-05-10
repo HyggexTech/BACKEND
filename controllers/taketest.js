@@ -73,7 +73,7 @@ const sortByIds = (questions, questionids) => {
 
   export const startTestForStudent = async (req, res, next) => {
     try {
-      const test = await Test.findById(req.body.testid);
+      const test = await Test.findById(req.params.testid);
   
       if (!test) {
         res.json({
