@@ -95,7 +95,7 @@ const sortByIds = (questions, questionids) => {
   
       const answersheets = await answersheet.find({
         student: req.user.id,
-        test: req.body.testid,
+        test: req.params.testid,
       });
   
       if (answersheets.length > 0) {
@@ -130,7 +130,7 @@ const sortByIds = (questions, questionids) => {
         }
       } else {
         const tempdata = new answersheet({
-          test: req.body.testid,
+          test: req.params.testid,
           student: req.user.id,
         });
         const newdata = await tempdata.save();
